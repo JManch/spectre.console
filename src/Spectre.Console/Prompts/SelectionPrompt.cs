@@ -8,6 +8,7 @@ public sealed class SelectionPrompt<T> : IPrompt<T>, IListPromptStrategy<T>
     where T : notnull
 {
     private readonly ListPromptTree<T> _tree;
+    private Dictionary<ConsoleKey, Action> _keyActions;
 
     /// <summary>
     /// Gets or sets the title.
@@ -59,6 +60,7 @@ public sealed class SelectionPrompt<T> : IPrompt<T>, IListPromptStrategy<T>
     public SelectionPrompt()
     {
         _tree = new ListPromptTree<T>(EqualityComparer<T>.Default);
+        _keyActions = new();
     }
 
     /// <summary>
@@ -71,6 +73,22 @@ public sealed class SelectionPrompt<T> : IPrompt<T>, IListPromptStrategy<T>
         var node = new ListPromptItem<T>(item);
         _tree.Add(node);
         return node;
+    }
+
+    /// <summary>
+    /// Adds a key action.
+    /// </summary>
+    /// <param name="keyAction">The keyAction to add.</param>
+    /// <returns>True or false on success or failure.</returns>
+    public bool AddKeyAction(Tuple<ConsoleKey, Action> keyAction)
+    {
+        if (!_keyActions.ContainsKey(keyAction.Item1))
+        {
+            _keyActions.Add(keyAction.Item1, keyAction.Item2);
+            return true;
+        }
+
+        return false;
     }
 
     /// <inheritdoc/>
@@ -102,6 +120,10 @@ public sealed class SelectionPrompt<T> : IPrompt<T>, IListPromptStrategy<T>
             }
 
             return ListPromptInputResult.Submit;
+        }
+        else if (_keyActions.ContainsKey(key.Key))
+        {
+            _keyActions[key.Key]();
         }
 
         return ListPromptInputResult.None;

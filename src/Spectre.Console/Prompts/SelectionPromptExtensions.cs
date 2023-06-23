@@ -121,6 +121,29 @@ public static class SelectionPromptExtensions
     }
 
     /// <summary>
+    /// Adds multiple key actions.
+    /// </summary>
+    /// <typeparam name="T">The prompt result type.</typeparam>
+    /// <param name="obj">The prompt.</param>
+    /// <param name="keyActions">The key actions to add.</param>
+    /// <returns>The same instance so that multiple calls can be chained.</returns>
+    public static SelectionPrompt<T> AddKeyActions<T>(this SelectionPrompt<T> obj, params Tuple<ConsoleKey, Action>[] keyActions)
+        where T : notnull
+    {
+        if (obj is null)
+        {
+            throw new ArgumentNullException(nameof(obj));
+        }
+
+        foreach (var keyAction in keyActions)
+        {
+            obj.AddKeyAction(keyAction);
+        }
+
+        return obj;
+    }
+
+    /// <summary>
     /// Sets the title.
     /// </summary>
     /// <typeparam name="T">The prompt result type.</typeparam>
