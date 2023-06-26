@@ -127,7 +127,7 @@ public static class SelectionPromptExtensions
     /// <param name="obj">The prompt.</param>
     /// <param name="keyActions">The key actions to add.</param>
     /// <returns>The same instance so that multiple calls can be chained.</returns>
-    public static SelectionPrompt<T> AddKeyActions<T>(this SelectionPrompt<T> obj, params Tuple<ConsoleKey, Action>[] keyActions)
+    public static SelectionPrompt<T> AddKeyActions<T>(this SelectionPrompt<T> obj, params Tuple<ConsoleKey, Func<ListPromptState<T>, ListPromptInputResult>>[] keyActions)
         where T : notnull
     {
         if (obj is null)

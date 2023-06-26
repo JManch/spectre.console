@@ -1,17 +1,17 @@
 namespace Spectre.Console;
 
-internal sealed class ListPromptState<T>
+public sealed class ListPromptState<T>
     where T : notnull
 {
     public int Index { get; private set; }
     public int ItemCount => Items.Count;
     public int PageSize { get; }
     public bool WrapAround { get; }
-    public IReadOnlyList<ListPromptItem<T>> Items { get; }
+    public List<ListPromptItem<T>> Items { get; }
 
     public ListPromptItem<T> Current => Items[Index];
 
-    public ListPromptState(IReadOnlyList<ListPromptItem<T>> items, int pageSize, bool wrapAround)
+    public ListPromptState(List<ListPromptItem<T>> items, int pageSize, bool wrapAround)
     {
         Index = 0;
         Items = items;

@@ -8,7 +8,7 @@ public sealed class SelectionPrompt<T> : IPrompt<T>, IListPromptStrategy<T>
     where T : notnull
 {
     private readonly ListPromptTree<T> _tree;
-    private Dictionary<ConsoleKey, Action> _keyActions;
+    private Dictionary<ConsoleKey, Func<ListPromptState<T>, ListPromptInputResult>> _keyActions;
 
     /// <summary>
     /// Gets or sets the title.
@@ -80,7 +80,7 @@ public sealed class SelectionPrompt<T> : IPrompt<T>, IListPromptStrategy<T>
     /// </summary>
     /// <param name="keyAction">The keyAction to add.</param>
     /// <returns>True or false on success or failure.</returns>
-    public bool AddKeyAction(Tuple<ConsoleKey, Action> keyAction)
+    public bool AddKeyAction(Tuple<ConsoleKey, Func<ListPromptState<T>, ListPromptInputResult>> keyAction)
     {
         if (!_keyActions.ContainsKey(keyAction.Item1))
         {
@@ -123,7 +123,7 @@ public sealed class SelectionPrompt<T> : IPrompt<T>, IListPromptStrategy<T>
         }
         else if (_keyActions.ContainsKey(key.Key))
         {
-            _keyActions[key.Key]();
+            return _keyActions[key.Key].Invoke(state);
         }
 
         return ListPromptInputResult.None;
@@ -186,10 +186,10 @@ public sealed class SelectionPrompt<T> : IPrompt<T>, IListPromptStrategy<T>
             var indent = new string(' ', item.Node.Depth * 2);
 
             var text = (Converter ?? TypeConverterHelper.ConvertToString)?.Invoke(item.Node.Data) ?? item.Node.Data.ToString() ?? "?";
-            if (current)
-            {
-                text = text.RemoveMarkup().EscapeMarkup();
-            }
+            // if (current)
+            // {
+            //     text = text.RemoveMarkup().EscapeMarkup();
+            // }
 
             grid.AddRow(new Markup(indent + prompt + " " + text, style));
         }

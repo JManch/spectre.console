@@ -1,9 +1,9 @@
 namespace Spectre.Console;
 
-internal sealed class ListPromptItem<T> : IMultiSelectionItem<T>
+public sealed class ListPromptItem<T> : IMultiSelectionItem<T>
     where T : notnull
 {
-    public T Data { get; }
+    public T Data { get; set; }
     public ListPromptItem<T>? Parent { get; }
     public List<ListPromptItem<T>> Children { get; }
     public int Depth { get; }
